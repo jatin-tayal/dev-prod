@@ -1,5 +1,6 @@
 {
   "name": "dev-prod",
+  "homepage": "https://jatin-tayal.github.io/dev-prod",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
