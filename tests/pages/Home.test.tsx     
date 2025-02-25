@@ -1,0 +1,42 @@
+import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import Home from '../../src/pages/Home';
+
+describe('Home Component', () => {
+  test('renders home page with title and featured utilities', () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+    
+    // Check for main title
+    expect(screen.getByText('Developer Utilities')).toBeInTheDocument();
+    
+    // Check for featured utilities
+    expect(screen.getByText('JSON Formatter')).toBeInTheDocument();
+    expect(screen.getByText('Base64 Encoder/Decoder')).toBeInTheDocument();
+    expect(screen.getByText('JWT Decoder')).toBeInTheDocument();
+    
+    // Check for coming soon section
+    expect(screen.getByText('More Coming Soon')).toBeInTheDocument();
+  });
+  
+  test('has correct links to utility pages', () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
+    
+    // Get all utility links
+    const jsonFormatterLink = screen.getByRole('link', { name: /JSON Formatter/i });
+    const base64Link = screen.getByRole('link', { name: /Base64 Encoder\/Decoder/i });
+    const jwtDecoderLink = screen.getByRole('link', { name: /JWT Decoder/i });
+    
+    // Check for correct hrefs
+    expect(jsonFormatterLink).toHaveAttribute('href', '/utilities/json-formatter');
+    expect(base64Link).toHaveAttribute('href', '/utilities/base64');
+    expect(jwtDecoderLink).toHaveAttribute('href', '/utilities/jwt-decoder');
+  });
+});
