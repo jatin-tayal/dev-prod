@@ -6,25 +6,28 @@ import NotFound from './pages/NotFound';
 import JsonFormatter from './pages/utilities/JsonFormatter';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider, ToastContainer } from './components/Feedback';
+import { ErrorBoundary } from './components/ErrorHandling';
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <ToastProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            
-            {/* Utility routes */}
-            <Route path="/utilities/json-formatter" element={<JsonFormatter />} />
-            
-            {/* 404 Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <ToastContainer />
-        </Layout>
-      </ToastProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <ToastProvider>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              
+              {/* Utility routes */}
+              <Route path="/utilities/json-formatter" element={<JsonFormatter />} />
+              
+              {/* 404 Route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <ToastContainer />
+          </Layout>
+        </ToastProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

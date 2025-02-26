@@ -1,52 +1,37 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { UtilityPage } from '../../components/UtilityPage';
 import { InputOutputPanel } from '../../components/InputOutputPanel';
 import { InfoBox } from '../../components/Feedback';
-import { useLocalStorage } from '../../hooks';
+import { useUtilityState } from '../../hooks';
+import { validators } from '../../utils/ValidationError';
 
 const JsonFormatter: React.FC = () => {
-  // Persistent state with localStorage
-  const [input, setInput] = useLocalStorage('json-formatter-input', '');
-  const [output, setOutput] = useLocalStorage('json-formatter-output', '');
-  
-  // UI state
-  const [error, setError] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const formatJSON = useCallback(() => {
-    if (!input.trim()) {
-      setError('Please enter JSON to format');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    // Simulate processing delay
-    setTimeout(() => {
-      try {
-        // Parse the JSON to validate it
-        const parsedJson = JSON.parse(input);
-        
-        // Format with 2 spaces indentation
-        const formattedJson = JSON.stringify(parsedJson, null, 2);
-        
-        setOutput(formattedJson);
-        setError('');
-      } catch (err) {
-        setError(`Invalid JSON: ${err instanceof Error ? err.message : 'Unknown error'}`);
-        setOutput('');
-      } finally {
-        setIsLoading(false);
-      }
-    }, 500);
-  }, [input, setOutput]);
-
-  const clearInput = useCallback(() => {
-    setInput('');
-    setOutput('');
-    setError('');
-  }, [setInput, setOutput]);
+  const {
+    input,
+    output,
+    isLoading,
+    error,
+    setInput,
+    process,
+    reset
+  } = useUtilityState<string, string>({
+    utilityId: 'json-formatter',
+    utilityName: 'JSON Formatter',
+    initialInput: '',
+    processFunction: async (inputJson) => {
+      // Parse the JSON to validate it
+      const parsedJson = JSON.parse(inputJson);
+      
+      // Format with 2 spaces indentation
+      return JSON.stringify(parsedJson, null, 2);
+    },
+    validateInput: validators.isValidJson('JSON'),
+    persist: true,
+    persistInput: true,
+    persistOutput: false,
+    syncWithUrl: true,
+    autoProcess: false,
+  });
 
   // Help content for the utility
   const helpContent = (
@@ -84,15 +69,23 @@ const JsonFormatter: React.FC = () => {
       title="JSON Formatter"
       description="Format and validate your JSON data with proper indentation"
       helpContent={helpContent}
+      actions={
+        <button
+          onClick={() => reset()}
+          className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+        >
+          Reset
+        </button>
+      }
     >
       <InputOutputPanel
         inputValue={input}
-        outputValue={output}
+        outputValue={output || ''}
         onInputChange={setInput}
-        onProcess={formatJSON}
-        onClearInput={clearInput}
+        onProcess={process}
+        onClearInput={reset}
         isLoading={isLoading}
-        error={error}
+        error={error?.message}
         inputType="json"
         outputType="json"
         processButtonText="Format JSON"
