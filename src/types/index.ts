@@ -19,6 +19,9 @@ export interface LayoutProps {
 
 export interface HeaderProps {
   title: string;
+  toggleSidebar: () => void;
+  toggleTheme: () => void;
+  isDarkMode: boolean;
 }
 
 export interface SidebarProps {
@@ -28,4 +31,25 @@ export interface SidebarProps {
 
 export interface MainProps {
   children: React.ReactNode;
+}
+
+export interface FooterProps {
+  githubUrl: string;
+}
+
+export interface CategoryGroupProps {
+  category: UtilityCategory;
+  activePath: string;
+  onNavItemClick?: () => void;
+}
+
+export interface NavItemProps {
+  utility: Utility;
+  isActive: boolean;
+  onClick?: () => void;
+}
+
+export interface SearchBoxProps {
+  onSearch: (searchTerm: string) => void;
+  placeholder?: string;
 }

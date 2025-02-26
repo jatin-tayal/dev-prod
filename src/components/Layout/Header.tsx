@@ -1,20 +1,17 @@
 import React from 'react';
+import { HeaderProps } from 'types';
+import { SunIcon, MoonIcon } from 'utils/icons';
 
-interface HeaderProps {
-  title: string;
-  toggleSidebar: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ title, toggleSidebar }) => {
+const Header: React.FC<HeaderProps> = ({ title, toggleSidebar, toggleTheme, isDarkMode }) => {
   return (
-    <header className="bg-white shadow-sm z-10">
+    <header className="bg-white dark:bg-gray-900 shadow-sm z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <button
                 type="button"
-                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+                className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
                 onClick={toggleSidebar}
                 aria-expanded="false"
               >
@@ -35,17 +32,28 @@ const Header: React.FC<HeaderProps> = ({ title, toggleSidebar }) => {
                   />
                 </svg>
               </button>
-              <h1 className="text-xl font-bold text-gray-900 ml-2 md:ml-0">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white ml-2 md:ml-0">
                 {title}
               </h1>
             </div>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {isDarkMode ? (
+                <SunIcon className="h-5 w-5" />
+              ) : (
+                <MoonIcon className="h-5 w-5" />
+              )}
+            </button>
             <a
-              href="https://github.com"
+              href="https://github.com/jatin-tayal/dev-prod"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-gray-500"
+              className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
             >
               <span className="sr-only">GitHub</span>
               <svg

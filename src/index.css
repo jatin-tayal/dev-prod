@@ -22,14 +22,31 @@ code {
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700;
+    @apply bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600;
+  }
+  
+  .btn-tertiary {
+    @apply bg-transparent text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800;
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-md p-6;
+    @apply bg-white rounded-lg shadow-md p-6 dark:bg-gray-900 dark:text-white;
   }
+
+  .file-drop-area {
+    @apply relative border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md transition-colors;
+  }
+
+  .file-drop-area:hover {
+    @apply border-primary-300 dark:border-primary-700;
+  }
+}
+
+label.required:after {
+  content: "*";
+  @apply text-red-500 ml-1;
 }
