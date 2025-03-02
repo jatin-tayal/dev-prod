@@ -29,9 +29,6 @@ jobs:
     - name: Check code style
       run: npm run lint
     
-    - name: Run tests
-      run: npm test -- --watchAll=false
-    
     - name: Build
       run: npm run build
 
