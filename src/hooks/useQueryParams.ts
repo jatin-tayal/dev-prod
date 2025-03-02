@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export type QueryParamValue = string | number | boolean | null | undefined;
 export type QueryParamValues = Record<string, QueryParamValue>;
@@ -14,16 +14,16 @@ interface QueryParamsOptions {
 // Default serializer/deserializer functions
 const defaultSerialize = (value: QueryParamValue): string | null => {
   if (value === null || value === undefined) return null;
-  if (typeof value === 'boolean') return value ? '1' : '0';
+  if (typeof value === "boolean") return value ? "1" : "0";
   return String(value);
 };
 
 const defaultDeserialize = (value: string): QueryParamValue => {
-  if (value === '0') return false;
-  if (value === '1') return true;
-  if (value === 'true') return true;
-  if (value === 'false') return false;
-  if (value === 'null' || value === 'undefined') return null;
+  if (value === "0") return false;
+  if (value === "1") return true;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  if (value === "null" || value === "undefined") return null;
   if (/^-?\d+$/.test(value)) return parseInt(value, 10);
   if (/^-?\d+\.\d+$/.test(value)) return parseFloat(value);
   return value;
@@ -47,7 +47,7 @@ function useQueryParams<T extends QueryParamValues = QueryParamValues>(
   const [state, setState] = useState<T>(() => {
     // Initialize with values from URL or defaults
     const stateFromUrl: Partial<T> = {};
-    
+
     // Get values from URL for each key in initialState
     Object.keys(initialState).forEach((key) => {
       const urlValue = searchParams.get(key);
@@ -94,7 +94,7 @@ function useQueryParams<T extends QueryParamValues = QueryParamValues>(
 
       // Update URL params
       const newParams = new URLSearchParams(searchParams);
-      
+
       Object.entries(newState).forEach(([key, value]) => {
         const serialized = serialize(value);
         if (serialized === null) {

@@ -1,12 +1,15 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
-import JsonFormatter from './pages/utilities/JsonFormatter';
-import { ThemeProvider } from './context/ThemeContext';
-import { ToastProvider, ToastContainer } from './components/Feedback';
-import { ErrorBoundary } from './components/ErrorHandling';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import JsonFormatter from "./pages/utilities/JsonFormatter";
+import JsonValidator from "./pages/utilities/JsonValidator";
+import JsonPathFinder from "./pages/utilities/JsonPathFinder";
+import JsonToString from "./pages/utilities/JsonToString";
+import { ThemeProvider } from "./context/ThemeContext";
+import { ToastProvider, ToastContainer } from "./components/Feedback";
+import { ErrorBoundary } from "./components/ErrorHandling";
 
 const App: React.FC = () => {
   return (
@@ -16,10 +19,25 @@ const App: React.FC = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              
-              {/* Utility routes */}
-              <Route path="/utilities/json-formatter" element={<JsonFormatter />} />
-              
+
+              {/* JSON Utilities */}
+              <Route
+                path="/utilities/json-formatter"
+                element={<JsonFormatter />}
+              />
+              <Route
+                path="/utilities/json-validator"
+                element={<JsonValidator />}
+              />
+              <Route
+                path="/utilities/json-path-finder"
+                element={<JsonPathFinder />}
+              />
+              <Route
+                path="/utilities/json-to-string"
+                element={<JsonToString />}
+              />
+
               {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>

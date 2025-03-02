@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Simple icon components for common icons
 // In a real application, you might want to use a library like react-icons or heroicons
@@ -298,25 +298,25 @@ export const MoonIcon: React.FC<IconProps> = ({ className }) => (
 
 // Map icon names to components
 const iconMap: Record<string, React.FC<IconProps>> = {
-  'code': CodeIcon,
-  'check-circle': CheckCircleIcon,
-  'search': SearchIcon,
-  'arrow-right': ArrowRightIcon,
-  'link': LinkIcon,
-  'type': TypeIcon,
-  'key': KeyIcon,
-  'plus-circle': PlusCircleIcon,
-  'shield': ShieldIcon,
-  'layout': LayoutIcon,
-  'droplet': DropletIcon,
-  'refresh-cw': RefreshCwIcon,
-  'hash': HashIcon,
-  'check-square': CheckSquareIcon,
-  'home': HomeIcon,
-  'sun': SunIcon,
-  'moon': MoonIcon,
+  code: CodeIcon,
+  "check-circle": CheckCircleIcon,
+  search: SearchIcon,
+  "arrow-right": ArrowRightIcon,
+  link: LinkIcon,
+  type: TypeIcon,
+  key: KeyIcon,
+  "plus-circle": PlusCircleIcon,
+  shield: ShieldIcon,
+  layout: LayoutIcon,
+  droplet: DropletIcon,
+  "refresh-cw": RefreshCwIcon,
+  hash: HashIcon,
+  "check-square": CheckSquareIcon,
+  home: HomeIcon,
+  sun: SunIcon,
+  moon: MoonIcon,
   // Special case for Base64 icon
-  '64': ({ className }) => (
+  "64": ({ className }) => (
     <span className={`${className} font-mono font-bold`}>64</span>
   ),
 };

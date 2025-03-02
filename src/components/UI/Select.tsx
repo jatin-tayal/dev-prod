@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface SelectOption {
   value: string;
@@ -32,9 +32,9 @@ const Select: React.FC<SelectProps> = ({
   disabled = false,
   error,
   required = false,
-  className = '',
-  labelClassName = '',
-  selectClassName = '',
+  className = "",
+  labelClassName = "",
+  selectClassName = "",
 }) => {
   // Generate a unique ID if none provided
   const selectId = id || `select-${Math.random().toString(36).substring(2, 9)}`;
@@ -49,7 +49,7 @@ const Select: React.FC<SelectProps> = ({
         <label
           htmlFor={selectId}
           className={`block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 ${
-            required ? 'required' : ''
+            required ? "required" : ""
           } ${labelClassName}`}
         >
           {label}
@@ -69,17 +69,21 @@ const Select: React.FC<SelectProps> = ({
           text-gray-900 dark:text-gray-100
           disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed
           dark:disabled:bg-gray-900 dark:disabled:text-gray-600
-          ${error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''}
+          ${
+            error
+              ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+              : ""
+          }
           ${selectClassName}
         `}
-        aria-invalid={error ? 'true' : 'false'}
+        aria-invalid={error ? "true" : "false"}
       >
         {placeholder && (
           <option value="" disabled>
             {placeholder}
           </option>
         )}
-        {options.map(option => (
+        {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

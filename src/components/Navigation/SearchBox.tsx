@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { SearchBoxProps } from 'types';
+import React, { useState } from "react";
+import { SearchBoxProps } from "types";
 
-const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, placeholder = 'Search utilities...' }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SearchBox: React.FC<SearchBoxProps> = ({
+  onSearch,
+  placeholder = "Search utilities...",
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -11,8 +14,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onSearch, placeholder = 'Search u
   };
 
   const handleClear = () => {
-    setSearchTerm('');
-    onSearch('');
+    setSearchTerm("");
+    onSearch("");
   };
 
   return (

@@ -5,13 +5,13 @@
 export class ValidationError extends Error {
   public field?: string;
   public code?: string;
-  
+
   constructor(message: string, field?: string, code?: string) {
     super(message);
-    this.name = 'ValidationError';
+    this.name = "ValidationError";
     this.field = field;
     this.code = code;
-    
+
     // This is necessary for instanceof to work correctly
     Object.setPrototypeOf(this, ValidationError.prototype);
   }
@@ -62,70 +62,71 @@ export async function validateField<T>(
  * Common validators
  */
 export const validators = {
-  required: <T>(fieldName: string = 'This field') => 
+  required:
+    <T>(fieldName: string = "This field") =>
     (value: T): void | ValidationError => {
       // Check for empty string, null, undefined
       if (
-        value === undefined || 
-        value === null || 
-        (typeof value === 'string' && value.trim() === '')
+        value === undefined ||
+        value === null ||
+        (typeof value === "string" && value.trim() === "")
       ) {
         return new ValidationError(
           `${fieldName} is required`,
           fieldName,
-          'required'
+          "required"
         );
       }
     },
-  
-  minLength: (min: number, fieldName: string = 'This field') => 
+
+  minLength:
+    (min: number, fieldName: string = "This field") =>
     (value: string): void | ValidationError => {
-      if (typeof value === 'string' && value.length < min) {
+      if (typeof value === "string" && value.length < min) {
         return new ValidationError(
           `${fieldName} must be at least ${min} characters`,
           fieldName,
-          'minLength'
+          "minLength"
         );
       }
     },
-  
-  maxLength: (max: number, fieldName: string = 'This field') => 
+
+  maxLength:
+    (max: number, fieldName: string = "This field") =>
     (value: string): void | ValidationError => {
-      if (typeof value === 'string' && value.length > max) {
+      if (typeof value === "string" && value.length > max) {
         return new ValidationError(
           `${fieldName} must be no more than ${max} characters`,
           fieldName,
-          'maxLength'
+          "maxLength"
         );
       }
     },
-  
-  pattern: (regex: RegExp, message: string, fieldName?: string) => 
+
+  pattern:
+    (regex: RegExp, message: string, fieldName?: string) =>
     (value: string): void | ValidationError => {
-      if (typeof value === 'string' && !regex.test(value)) {
-        return new ValidationError(
-          message,
-          fieldName,
-          'pattern'
-        );
+      if (typeof value === "string" && !regex.test(value)) {
+        return new ValidationError(message, fieldName, "pattern");
       }
     },
-  
+
   // Add more validators as needed
-  isValidJson: (fieldName: string = 'JSON') => 
+  isValidJson:
+    (fieldName: string = "JSON") =>
     (value: string): void | ValidationError => {
       if (!value.trim()) return;
-      
+
       try {
         JSON.parse(value);
       } catch (error) {
         return new ValidationError(
           `Invalid JSON: ${(error as Error).message}`,
           fieldName,
-          'json'
+          "json"
         );
       }
-    }
+    },
 };
 
 export default ValidationError;

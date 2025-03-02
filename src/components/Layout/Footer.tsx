@@ -1,5 +1,5 @@
-import React from 'react';
-import { FooterProps } from 'types';
+import React from "react";
+import { FooterProps } from "types";
 
 const Footer: React.FC<FooterProps> = ({ githubUrl }) => {
   return (

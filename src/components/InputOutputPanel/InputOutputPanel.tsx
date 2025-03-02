@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Button } from '../UI';
-import { useClipboard } from '../../hooks';
+import React, { useState } from "react";
+import { Button } from "../UI";
+import { useClipboard } from "../../hooks";
 
-export type InputType = 'text' | 'json' | 'file' | 'code';
+export type InputType = "text" | "json" | "file" | "code";
 
 export interface InputOutputPanelProps {
   inputValue: string;
@@ -36,21 +36,21 @@ const InputOutputPanel: React.FC<InputOutputPanelProps> = ({
   onClearInput,
   onProcess,
   onFileUpload,
-  inputType = 'text',
-  outputType = 'text',
-  inputLabel = 'Input',
-  outputLabel = 'Output',
-  inputPlaceholder = 'Enter your text here...',
-  outputPlaceholder = 'Output will appear here...',
-  processButtonText = 'Process',
+  inputType = "text",
+  outputType = "text",
+  inputLabel = "Input",
+  outputLabel = "Output",
+  inputPlaceholder = "Enter your text here...",
+  outputPlaceholder = "Output will appear here...",
+  processButtonText = "Process",
   isLoading = false,
   error,
-  inputHeight = 'h-64',
-  outputHeight = 'h-64',
-  className = '',
+  inputHeight = "h-64",
+  outputHeight = "h-64",
+  className = "",
   readOnly = false,
   maxFileSize = 5, // 5MB default
-  acceptedFileTypes = '',
+  acceptedFileTypes = "",
   allowFileDrop = true,
 }) => {
   const { copyToClipboard, copied } = useClipboard();
@@ -64,7 +64,7 @@ const InputOutputPanel: React.FC<InputOutputPanelProps> = ({
     if (onClearInput) {
       onClearInput();
     } else {
-      onInputChange('');
+      onInputChange("");
     }
   };
 
@@ -131,7 +131,7 @@ const InputOutputPanel: React.FC<InputOutputPanelProps> = ({
                 Clear
               </Button>
             )}
-            {inputType === 'file' && onFileUpload && (
+            {inputType === "file" && onFileUpload && (
               <div>
                 <input
                   type="file"
@@ -154,7 +154,7 @@ const InputOutputPanel: React.FC<InputOutputPanelProps> = ({
 
         <div
           className={`relative ${
-            inputType === 'file' && allowFileDrop ? 'file-drop-area' : ''
+            inputType === "file" && allowFileDrop ? "file-drop-area" : ""
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -167,23 +167,25 @@ const InputOutputPanel: React.FC<InputOutputPanelProps> = ({
             disabled={isLoading || readOnly}
             className={`w-full ${inputHeight} px-3 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
               isDragging
-                ? 'border-primary-500 border-dashed'
-                : 'border-gray-300 dark:border-gray-700'
-            } ${error ? 'border-red-500' : ''}`}
+                ? "border-primary-500 border-dashed"
+                : "border-gray-300 dark:border-gray-700"
+            } ${error ? "border-red-500" : ""}`}
             spellCheck="false"
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
           />
 
-          {inputType === 'file' && allowFileDrop && isDragging && (
+          {inputType === "file" && allowFileDrop && isDragging && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 rounded-md z-10">
               <div className="text-white font-medium">Drop file here</div>
             </div>
           )}
         </div>
 
-        {error && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{error}</p>}
+        {error && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-500">{error}</p>
+        )}
       </div>
 
       {/* Action Buttons */}
@@ -214,7 +216,7 @@ const InputOutputPanel: React.FC<InputOutputPanelProps> = ({
                 onClick={copyOutput}
                 disabled={isLoading}
               >
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? "Copied!" : "Copy"}
               </Button>
             )}
           </div>

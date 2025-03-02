@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
-import { CategoryGroupProps } from 'types';
-import NavItem from './NavItem';
+import React, { useState } from "react";
+import { CategoryGroupProps } from "types";
+import NavItem from "./NavItem";
 
-const CategoryGroup: React.FC<CategoryGroupProps> = ({ category, activePath, onNavItemClick }) => {
+const CategoryGroup: React.FC<CategoryGroupProps> = ({
+  category,
+  activePath,
+  onNavItemClick,
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  
+
   // Check if any utility in this category is active
-  const hasActiveItem = category.utilities.some(utility => utility.path === activePath);
+  const hasActiveItem = category.utilities.some(
+    (utility) => utility.path === activePath
+  );
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -14,7 +20,7 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({ category, activePath, onN
 
   return (
     <div className="mb-4">
-      <button 
+      <button
         className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 group"
         onClick={toggleExpanded}
         aria-expanded={isExpanded}
@@ -22,7 +28,7 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({ category, activePath, onN
         <span>{category.name}</span>
         <svg
           className={`h-5 w-5 text-gray-400 group-hover:text-gray-500 transition-transform ${
-            isExpanded ? 'transform rotate-0' : 'transform rotate-180'
+            isExpanded ? "transform rotate-0" : "transform rotate-180"
           }`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
@@ -36,8 +42,8 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({ category, activePath, onN
           />
         </svg>
       </button>
-      
-      <div className={`mt-1 space-y-1 ${isExpanded ? 'block' : 'hidden'}`}>
+
+      <div className={`mt-1 space-y-1 ${isExpanded ? "block" : "hidden"}`}>
         {category.utilities.map((utility) => (
           <NavItem
             key={utility.id}

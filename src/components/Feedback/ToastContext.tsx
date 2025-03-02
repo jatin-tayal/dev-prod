@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback } from "react";
 
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+export type ToastType = "success" | "error" | "info" | "warning";
 
 export interface Toast {
   id: string;
@@ -17,7 +17,9 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   // Add a new toast
@@ -59,7 +61,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useToast = (): ToastContextType => {
   const context = useContext(ToastContext);
   if (context === undefined) {
-    throw new Error('useToast must be used within a ToastProvider');
+    throw new Error("useToast must be used within a ToastProvider");
   }
   return context;
 };
@@ -67,11 +69,15 @@ export const useToast = (): ToastContextType => {
 // Helper functions for different toast types
 export const useToastHelpers = () => {
   const { addToast } = useToast();
-  
+
   return {
-    success: (message: string, duration?: number) => addToast('success', message, duration),
-    error: (message: string, duration?: number) => addToast('error', message, duration),
-    info: (message: string, duration?: number) => addToast('info', message, duration),
-    warning: (message: string, duration?: number) => addToast('warning', message, duration),
+    success: (message: string, duration?: number) =>
+      addToast("success", message, duration),
+    error: (message: string, duration?: number) =>
+      addToast("error", message, duration),
+    info: (message: string, duration?: number) =>
+      addToast("info", message, duration),
+    warning: (message: string, duration?: number) =>
+      addToast("warning", message, duration),
   };
 };

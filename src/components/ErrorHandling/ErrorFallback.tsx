@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '../UI';
+import React from "react";
+import { Button } from "../UI";
 
 interface ErrorFallbackProps {
   error: Error | null;
@@ -10,12 +10,12 @@ interface ErrorFallbackProps {
 /**
  * Fallback UI displayed when an error is caught by ErrorBoundary
  */
-const ErrorFallback: React.FC<ErrorFallbackProps> = ({ 
-  error, 
-  errorInfo, 
-  resetError 
+const ErrorFallback: React.FC<ErrorFallbackProps> = ({
+  error,
+  errorInfo,
+  resetError,
 }) => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isDevelopment = process.env.NODE_ENV === "development";
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -43,7 +43,8 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
 
         <div className="mb-6">
           <p className="text-gray-700 dark:text-gray-300 mb-4">
-            We're sorry, but an error occurred while trying to render this page. Our team has been notified.
+            We're sorry, but an error occurred while trying to render this page.
+            Our team has been notified.
           </p>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md overflow-auto">
             <p className="font-mono text-red-600 dark:text-red-400 text-sm mb-2">
@@ -69,16 +70,13 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
             </Button>
           )}
           <Button
-            onClick={() => window.location.href = '/'}
+            onClick={() => (window.location.href = "/")}
             variant="secondary"
           >
             Go to Home Page
           </Button>
           {isDevelopment && (
-            <Button
-              onClick={() => window.location.reload()}
-              variant="tertiary"
-            >
+            <Button onClick={() => window.location.reload()} variant="tertiary">
               Reload Page
             </Button>
           )}

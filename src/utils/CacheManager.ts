@@ -20,7 +20,7 @@ class CacheManager {
   private storageKey: string;
 
   constructor(options: CacheOptions = {}) {
-    this.namespace = options.namespace || 'app-cache';
+    this.namespace = options.namespace || "app-cache";
     this.defaultTTL = options.defaultTTL || 60 * 60 * 1000; // 1 hour in milliseconds
     this.storageKey = `${this.namespace}-cache-store`;
     this.loadFromStorage();
@@ -30,14 +30,19 @@ class CacheManager {
    * Set a value in the cache
    */
   set<T>(key: string, value: T, ttl?: number): void {
-    const expires = ttl !== undefined
-      ? (ttl === 0 ? null : Date.now() + ttl)
-      : (this.defaultTTL === 0 ? null : Date.now() + this.defaultTTL);
+    const expires =
+      ttl !== undefined
+        ? ttl === 0
+          ? null
+          : Date.now() + ttl
+        : this.defaultTTL === 0
+        ? null
+        : Date.now() + this.defaultTTL;
 
     const entry: CacheEntry<T> = {
       value,
       expires,
-      created: Date.now()
+      created: Date.now(),
     };
 
     this.cache.set(this.getNamespacedKey(key), entry);
@@ -131,7 +136,9 @@ class CacheManager {
    */
   keys(): string[] {
     this.prune(); // Remove expired entries before returning keys
-    return Array.from(this.cache.keys()).map(key => this.removeNamespace(key));
+    return Array.from(this.cache.keys()).map((key) =>
+      this.removeNamespace(key)
+    );
   }
 
   /**
@@ -154,7 +161,7 @@ class CacheManager {
     let newestEntry = 0;
 
     // Use Array.from to avoid TypeScript errors with for..of loops on iterators
-    Array.from(this.cache.values()).forEach(entry => {
+    Array.from(this.cache.values()).forEach((entry) => {
       if (entry.expires === null) {
         permanent++;
       } else if (entry.expires < now) {
@@ -176,8 +183,9 @@ class CacheManager {
       expired,
       permanent,
       temporary,
-      oldestEntry: oldestEntry !== Number.MAX_SAFE_INTEGER ? new Date(oldestEntry) : null,
-      newestEntry: newestEntry !== 0 ? new Date(newestEntry) : null
+      oldestEntry:
+        oldestEntry !== Number.MAX_SAFE_INTEGER ? new Date(oldestEntry) : null,
+      newestEntry: newestEntry !== 0 ? new Date(newestEntry) : null,
     };
   }
 
@@ -191,11 +199,11 @@ class CacheManager {
   ): (...args: Args) => T {
     return (...args: Args): T => {
       const cacheKey = keyFn ? keyFn(...args) : JSON.stringify(args);
-      
+
       if (this.has(cacheKey)) {
         return this.get<T>(cacheKey)!;
       }
-      
+
       const result = fn(...args);
       this.set(cacheKey, result, ttl);
       return result;
@@ -222,14 +230,14 @@ class CacheManager {
   private loadFromStorage(): void {
     try {
       const cachedData = localStorage.getItem(this.storageKey);
-      
+
       if (cachedData) {
         const parsed = JSON.parse(cachedData);
         this.cache = new Map(Object.entries(parsed));
         this.prune(); // Remove expired entries on load
       }
     } catch (error) {
-      console.error('Failed to load cache from storage:', error);
+      console.error("Failed to load cache from storage:", error);
       this.cache = new Map();
     }
   }
@@ -243,10 +251,13 @@ class CacheManager {
       const cacheObj = Object.fromEntries(this.cache.entries());
       localStorage.setItem(this.storageKey, JSON.stringify(cacheObj));
     } catch (error) {
-      console.error('Failed to save cache to storage:', error);
-      
+      console.error("Failed to save cache to storage:", error);
+
       // If we hit storage limits, clear old entries
-      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      if (
+        error instanceof DOMException &&
+        error.name === "QuotaExceededError"
+      ) {
         this.pruneOldEntries(50); // Remove 50% of entries
         try {
           const cacheObj = Object.fromEntries(this.cache.entries());
@@ -265,12 +276,15 @@ class CacheManager {
     if (this.cache.size === 0) return 0;
 
     // Calculate how many entries to remove
-    const entriesToRemove = Math.ceil(this.cache.size * (percentToRemove / 100));
+    const entriesToRemove = Math.ceil(
+      this.cache.size * (percentToRemove / 100)
+    );
     if (entriesToRemove <= 0) return 0;
 
     // Sort entries by creation time
-    const entries = Array.from(this.cache.entries())
-      .sort((a, b) => a[1].created - b[1].created);
+    const entries = Array.from(this.cache.entries()).sort(
+      (a, b) => a[1].created - b[1].created
+    );
 
     // Remove the oldest entries
     const removed = entries.slice(0, entriesToRemove);

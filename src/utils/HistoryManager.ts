@@ -8,7 +8,7 @@ export interface HistoryEntry {
 
 export type HistoryFilter = (entry: HistoryEntry) => boolean;
 
-const HISTORY_STORAGE_KEY = 'dev-prod-history';
+const HISTORY_STORAGE_KEY = "dev-prod-history";
 const DEFAULT_MAX_ENTRIES = 20;
 
 /**
@@ -26,29 +26,29 @@ class HistoryManager {
   /**
    * Add a new entry to the history
    */
-  addEntry(entry: Omit<HistoryEntry, 'id' | 'timestamp'>): HistoryEntry {
+  addEntry(entry: Omit<HistoryEntry, "id" | "timestamp">): HistoryEntry {
     // Create a complete entry with generated id and timestamp
     const newEntry: HistoryEntry = {
       id: this.generateId(),
       timestamp: Date.now(),
-      ...entry
+      ...entry,
     };
 
     // Check if similar entry exists (same path)
-    const existingIndex = this.history.findIndex(e => e.path === entry.path);
-    
+    const existingIndex = this.history.findIndex((e) => e.path === entry.path);
+
     if (existingIndex !== -1) {
       // Update existing entry
       this.history[existingIndex] = {
         ...this.history[existingIndex],
         title: entry.title,
         timestamp: newEntry.timestamp,
-        data: entry.data
+        data: entry.data,
       };
     } else {
       // Add new entry at the beginning
       this.history.unshift(newEntry);
-      
+
       // Limit the number of entries
       if (this.history.length > this.maxEntries) {
         this.history = this.history.slice(0, this.maxEntries);
@@ -80,7 +80,7 @@ class HistoryManager {
    * Get a specific entry by id
    */
   getEntry(id: string): HistoryEntry | undefined {
-    return this.history.find(entry => entry.id === id);
+    return this.history.find((entry) => entry.id === id);
   }
 
   /**
@@ -88,13 +88,13 @@ class HistoryManager {
    */
   removeEntry(id: string): boolean {
     const initialLength = this.history.length;
-    this.history = this.history.filter(entry => entry.id !== id);
-    
+    this.history = this.history.filter((entry) => entry.id !== id);
+
     if (this.history.length !== initialLength) {
       this.saveToStorage();
       return true;
     }
-    
+
     return false;
   }
 
@@ -123,7 +123,7 @@ class HistoryManager {
         this.history = JSON.parse(storedHistory);
       }
     } catch (error) {
-      console.error('Failed to load history from storage:', error);
+      console.error("Failed to load history from storage:", error);
       this.history = [];
     }
   }
@@ -135,7 +135,7 @@ class HistoryManager {
     try {
       localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(this.history));
     } catch (error) {
-      console.error('Failed to save history to storage:', error);
+      console.error("Failed to save history to storage:", error);
     }
   }
 }

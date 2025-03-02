@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export interface InfoBoxProps {
   title?: string;
@@ -11,7 +11,7 @@ export interface InfoBoxProps {
 const InfoBox: React.FC<InfoBoxProps> = ({
   title,
   children,
-  className = '',
+  className = "",
   initiallyExpanded = true,
   collapsible = true,
 }) => {
@@ -32,7 +32,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({
           className={`
             flex justify-between items-center px-4 py-3 
             bg-blue-100 dark:bg-blue-900/40 border-b border-blue-200 dark:border-blue-800
-            ${collapsible ? 'cursor-pointer' : ''}
+            ${collapsible ? "cursor-pointer" : ""}
           `}
           onClick={toggleExpanded}
           aria-expanded={isExpanded}
@@ -44,11 +44,11 @@ const InfoBox: React.FC<InfoBoxProps> = ({
             <button
               type="button"
               className="focus:outline-none"
-              aria-label={isExpanded ? 'Collapse' : 'Expand'}
+              aria-label={isExpanded ? "Collapse" : "Expand"}
             >
               <svg
                 className={`w-5 h-5 text-blue-600 dark:text-blue-400 transition-transform ${
-                  isExpanded ? 'transform rotate-180' : ''
+                  isExpanded ? "transform rotate-180" : ""
                 }`}
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -67,7 +67,7 @@ const InfoBox: React.FC<InfoBoxProps> = ({
       )}
       <div
         className={`px-4 py-3 text-sm text-blue-700 dark:text-blue-300 transition-all overflow-hidden ${
-          isExpanded ? 'max-h-screen' : 'max-h-0 py-0'
+          isExpanded ? "max-h-screen" : "max-h-0 py-0"
         }`}
       >
         {children}

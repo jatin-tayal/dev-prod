@@ -1,8 +1,13 @@
-import React from 'react';
-import { HeaderProps } from 'types';
-import { SunIcon, MoonIcon } from 'utils/icons';
+import React from "react";
+import { HeaderProps } from "types";
+import { SunIcon, MoonIcon } from "utils/icons";
 
-const Header: React.FC<HeaderProps> = ({ title, toggleSidebar, toggleTheme, isDarkMode }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  toggleSidebar,
+  toggleTheme,
+  isDarkMode,
+}) => {
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,7 +46,9 @@ const Header: React.FC<HeaderProps> = ({ title, toggleSidebar, toggleTheme, isDa
             <button
               onClick={toggleTheme}
               className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={
+                isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+              }
             >
               {isDarkMode ? (
                 <SunIcon className="h-5 w-5" />

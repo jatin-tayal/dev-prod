@@ -22,7 +22,7 @@ class StorageUtils {
   private deserializer: <T>(value: string) => T;
 
   constructor(options: StorageOptions = {}) {
-    this.prefix = options.prefix || 'dev-prod-';
+    this.prefix = options.prefix || "dev-prod-";
     this.serializer = options.serializer || defaultSerializer;
     this.deserializer = options.deserializer || defaultDeserializer;
   }
@@ -34,14 +34,17 @@ class StorageUtils {
     try {
       const prefixedKey = this.prefix + key;
       const storedValue = localStorage.getItem(prefixedKey);
-      
+
       if (storedValue === null) {
         return defaultValue;
       }
-      
+
       return this.deserializer<T>(storedValue);
     } catch (error) {
-      console.error(`Error getting value from localStorage for key ${key}:`, error);
+      console.error(
+        `Error getting value from localStorage for key ${key}:`,
+        error
+      );
       return defaultValue;
     }
   }
@@ -53,11 +56,14 @@ class StorageUtils {
     try {
       const prefixedKey = this.prefix + key;
       const serializedValue = this.serializer(value);
-      
+
       localStorage.setItem(prefixedKey, serializedValue);
       return true;
     } catch (error) {
-      console.error(`Error setting value in localStorage for key ${key}:`, error);
+      console.error(
+        `Error setting value in localStorage for key ${key}:`,
+        error
+      );
       return false;
     }
   }
@@ -71,7 +77,10 @@ class StorageUtils {
       localStorage.removeItem(prefixedKey);
       return true;
     } catch (error) {
-      console.error(`Error removing value from localStorage for key ${key}:`, error);
+      console.error(
+        `Error removing value from localStorage for key ${key}:`,
+        error
+      );
       return false;
     }
   }
@@ -89,15 +98,15 @@ class StorageUtils {
    */
   keys(): string[] {
     const keys: string[] = [];
-    
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      
+
       if (key && key.startsWith(this.prefix)) {
         keys.push(key.slice(this.prefix.length));
       }
     }
-    
+
     return keys;
   }
 
@@ -106,7 +115,7 @@ class StorageUtils {
    */
   clear(): void {
     const keysToRemove = this.keys();
-    
+
     for (const key of keysToRemove) {
       this.remove(key);
     }
@@ -117,17 +126,17 @@ class StorageUtils {
    */
   size(): number {
     let totalSize = 0;
-    
+
     for (const key of this.keys()) {
       const prefixedKey = this.prefix + key;
       const item = localStorage.getItem(prefixedKey);
-      
+
       if (item) {
         // Key length + value length in UTF-16 (2 bytes per character)
         totalSize += (prefixedKey.length + item.length) * 2;
       }
     }
-    
+
     return totalSize;
   }
 }

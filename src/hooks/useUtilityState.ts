@@ -1,41 +1,43 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import useQueryParams from './useQueryParams';
-import { useError } from '../context/ErrorContext';
-import storage from '../utils/StorageUtils';
-import ValidationError from '../utils/ValidationError';
-import historyManager from '../utils/HistoryManager';
-import analytics from '../utils/AnalyticsTracker';
-import UrlStateManager from '../utils/UrlStateManager';
+import { useState, useCallback, useEffect, useRef } from "react";
+import useQueryParams from "./useQueryParams";
+import { useError } from "../context/ErrorContext";
+import storage from "../utils/StorageUtils";
+import ValidationError from "../utils/ValidationError";
+import historyManager from "../utils/HistoryManager";
+import analytics from "../utils/AnalyticsTracker";
+import UrlStateManager from "../utils/UrlStateManager";
 
 export interface UtilityStateOptions<T, R> {
   // Unique ID for the utility
   utilityId: string;
-  
+
   // Display name for the utility
   utilityName: string;
-  
+
   // Initial state values
   initialInput: T;
   initialOutput?: R;
-  
+
   // Processing function
   processFunction?: (input: T) => Promise<R> | R;
-  
+
   // Validation function
-  validateInput?: (input: T) => ValidationError | void | Promise<ValidationError | void>;
-  
+  validateInput?: (
+    input: T
+  ) => ValidationError | void | Promise<ValidationError | void>;
+
   // Persistence options
   persist?: boolean;
   persistInput?: boolean;
   persistOutput?: boolean;
-  
+
   // URL state options
   syncWithUrl?: boolean;
   urlParamPrefix?: string;
-  
+
   // Track utility usage
   trackUsage?: boolean;
-  
+
   // Auto-process on input change (debounced)
   autoProcess?: boolean;
   autoProcessDelay?: number;
@@ -47,7 +49,7 @@ export interface UtilityState<T, R> {
   output: R | undefined;
   isLoading: boolean;
   error: Error | null;
-  
+
   // Actions
   setInput: (input: T | ((prev: T) => T)) => void;
   setOutput: (output: R | undefined) => void;
@@ -55,7 +57,7 @@ export interface UtilityState<T, R> {
   reset: () => void;
   clearOutput: () => void;
   clearError: () => void;
-  
+
   // Utility
   getShareableUrl: () => string;
   copyShareableUrl: () => boolean;
@@ -78,7 +80,7 @@ function useUtilityState<T, R = any>(
     persistInput = true,
     persistOutput = false,
     syncWithUrl = true,
-    urlParamPrefix = '',
+    urlParamPrefix = "",
     trackUsage = true,
     autoProcess = false,
     autoProcessDelay = 1000,
@@ -87,10 +89,11 @@ function useUtilityState<T, R = any>(
   // Generate storage keys
   const inputStorageKey = `${utilityId}-input`;
   const outputStorageKey = `${utilityId}-output`;
-  
+
   // Get error context
-  const { setError: setContextError, clearError: clearContextError } = useError();
-  
+  const { setError: setContextError, clearError: clearContextError } =
+    useError();
+
   // Load initial state from storage if available
   const getInitialInputFromStorage = () => {
     if (persist && persistInput) {
@@ -99,7 +102,7 @@ function useUtilityState<T, R = any>(
     }
     return initialInput;
   };
-  
+
   const getInitialOutputFromStorage = () => {
     if (persist && persistOutput) {
       const storedValue = storage.get<R>(outputStorageKey);
@@ -107,9 +110,9 @@ function useUtilityState<T, R = any>(
     }
     return initialOutput;
   };
-  
+
   // Set up URL param sync
-  const prefix = urlParamPrefix ? `${urlParamPrefix}-` : '';
+  const prefix = urlParamPrefix ? `${urlParamPrefix}-` : "";
   const [urlState, setUrlState] = useQueryParams<{
     [key: string]: any;
   }>(
@@ -137,13 +140,15 @@ function useUtilityState<T, R = any>(
 
   // Local state
   const [input, setInputState] = useState<T>(getInitialInputFromUrl());
-  const [output, setOutputState] = useState<R | undefined>(getInitialOutputFromUrl());
+  const [output, setOutputState] = useState<R | undefined>(
+    getInitialOutputFromUrl()
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setLocalError] = useState<Error | null>(null);
-  
+
   // Track if component is mounted for async safety
   const isMounted = useRef(true);
-  
+
   // Timer for auto-process debouncing
   const autoProcessTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -158,10 +163,13 @@ function useUtilityState<T, R = any>(
   }, []);
 
   // Set error in both local state and context
-  const setError = useCallback((err: Error | null) => {
-    setLocalError(err);
-    setContextError(err);
-  }, [setContextError]);
+  const setError = useCallback(
+    (err: Error | null) => {
+      setLocalError(err);
+      setContextError(err);
+    },
+    [setContextError]
+  );
 
   // Clear error in both local state and context
   const clearError = useCallback(() => {
@@ -170,78 +178,85 @@ function useUtilityState<T, R = any>(
   }, [clearContextError]);
 
   // Set input with side effects (persistence, URL sync)
-  const setInput = useCallback((newInput: T | ((prev: T) => T)) => {
-    setInputState(prev => {
-      const nextInput = typeof newInput === 'function'
-        ? (newInput as (prev: T) => T)(prev)
-        : newInput;
-      
-      // Persist to localStorage if enabled
-      if (persist && persistInput) {
-        storage.set(inputStorageKey, nextInput);
-      }
-      
-      // Sync to URL if enabled
-      if (syncWithUrl) {
-        setUrlState({ [`${prefix}in`]: nextInput });
-      }
-      
-      // Schedule auto-processing if enabled
-      if (autoProcess && processFunction) {
-        if (autoProcessTimerRef.current) {
-          clearTimeout(autoProcessTimerRef.current);
+  const setInput = useCallback(
+    (newInput: T | ((prev: T) => T)) => {
+      setInputState((prev) => {
+        const nextInput =
+          typeof newInput === "function"
+            ? (newInput as (prev: T) => T)(prev)
+            : newInput;
+
+        // Persist to localStorage if enabled
+        if (persist && persistInput) {
+          storage.set(inputStorageKey, nextInput);
         }
-        
-        autoProcessTimerRef.current = setTimeout(() => {
-          process();
-          autoProcessTimerRef.current = null;
-        }, autoProcessDelay);
-      }
-      
-      return nextInput;
-    });
-    
-    // Clear error when input changes
-    clearError();
-  }, [
-    persistInput, 
-    persist, 
-    inputStorageKey, 
-    syncWithUrl, 
-    setUrlState, 
-    prefix, 
-    autoProcess, 
-    processFunction, 
-    autoProcessDelay,
-    clearError
-  ]);
+
+        // Sync to URL if enabled
+        if (syncWithUrl) {
+          setUrlState({ [`${prefix}in`]: nextInput });
+        }
+
+        // Schedule auto-processing if enabled
+        if (autoProcess && processFunction) {
+          if (autoProcessTimerRef.current) {
+            clearTimeout(autoProcessTimerRef.current);
+          }
+
+          autoProcessTimerRef.current = setTimeout(() => {
+            process();
+            autoProcessTimerRef.current = null;
+          }, autoProcessDelay);
+        }
+
+        return nextInput;
+      });
+
+      // Clear error when input changes
+      clearError();
+    },
+    [
+      persistInput,
+      persist,
+      inputStorageKey,
+      syncWithUrl,
+      setUrlState,
+      prefix,
+      autoProcess,
+      processFunction,
+      autoProcessDelay,
+      clearError,
+    ]
+  );
 
   // Set output with side effects (persistence, URL sync)
-  const setOutput = useCallback((newOutput: R | undefined) => {
-    setOutputState(newOutput);
-    
-    // Persist to localStorage if enabled
-    if (persist && persistOutput && newOutput !== undefined) {
-      storage.set(outputStorageKey, newOutput);
-    }
-    
-    // Sync to URL if enabled
-    if (syncWithUrl) {
-      setUrlState({ [`${prefix}out`]: newOutput });
-    }
-  }, [persistOutput, persist, outputStorageKey, syncWithUrl, setUrlState, prefix]);
+  const setOutput = useCallback(
+    (newOutput: R | undefined) => {
+      setOutputState(newOutput);
+
+      // Persist to localStorage if enabled
+      if (persist && persistOutput && newOutput !== undefined) {
+        storage.set(outputStorageKey, newOutput);
+      }
+
+      // Sync to URL if enabled
+      if (syncWithUrl) {
+        setUrlState({ [`${prefix}out`]: newOutput });
+      }
+    },
+    [persistOutput, persist, outputStorageKey, syncWithUrl, setUrlState, prefix]
+  );
 
   // Process the input to generate output
   const process = useCallback(async (): Promise<R | undefined> => {
     if (!processFunction) {
-      console.warn('No process function provided for useUtilityState');
+      console.warn("No process function provided for useUtilityState");
       return undefined;
     }
-    
+
     try {
       setIsLoading(true);
       clearError();
-      
+
       // Validate input if validation function is provided
       if (validateInput) {
         const validationResult = await validateInput(input);
@@ -249,52 +264,61 @@ function useUtilityState<T, R = any>(
           throw validationResult;
         }
       }
-      
+
       // Track utility usage
       if (trackUsage) {
         analytics.trackUtilityUsage(utilityId, utilityName);
         historyManager.addEntry({
           path: window.location.pathname,
           title: utilityName,
-          data: { input }
+          data: { input },
         });
       }
-      
+
       // Process the input
       const result = await processFunction(input);
-      
-      // Only update state if component is still mounted
-      if (isMounted.current) {
-        setOutput(result);
-        setIsLoading(false);
-      }
-      
+
+      setOutput(result);
+      setIsLoading(false);
+
       return result;
     } catch (err) {
       if (isMounted.current) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
         setIsLoading(false);
-        
+
         // Track error
         if (trackUsage) {
-          analytics.trackError(
-            error.name, 
-            error.message, 
-            { utilityId, input: typeof input === 'string' ? input.substring(0, 100) : 'non-string input' }
-          );
+          analytics.trackError(error.name, error.message, {
+            utilityId,
+            input:
+              typeof input === "string"
+                ? input.substring(0, 100)
+                : "non-string input",
+          });
         }
       }
       return undefined;
     }
-  }, [processFunction, validateInput, input, trackUsage, utilityId, utilityName, setOutput, clearError, setError]);
+  }, [
+    processFunction,
+    validateInput,
+    input,
+    trackUsage,
+    utilityId,
+    utilityName,
+    setOutput,
+    clearError,
+    setError,
+  ]);
 
   // Reset to initial state
   const reset = useCallback(() => {
     setInput(initialInput);
     setOutput(initialOutput);
     clearError();
-    
+
     // Remove from localStorage if enabled
     if (persist) {
       if (persistInput) {
@@ -306,72 +330,80 @@ function useUtilityState<T, R = any>(
         storage.remove(outputStorageKey);
       }
     }
-    
+
     // Remove from URL if enabled
     if (syncWithUrl) {
       setUrlState({
         [`${prefix}in`]: initialInput,
-        [`${prefix}out`]: initialOutput
+        [`${prefix}out`]: initialOutput,
       });
     }
   }, [
-    initialInput, 
-    initialOutput, 
-    setInput, 
-    setOutput, 
-    clearError, 
-    persist, 
-    persistInput, 
-    persistOutput, 
-    inputStorageKey, 
-    outputStorageKey, 
-    syncWithUrl, 
-    setUrlState, 
-    prefix
+    initialInput,
+    initialOutput,
+    setInput,
+    setOutput,
+    clearError,
+    persist,
+    persistInput,
+    persistOutput,
+    inputStorageKey,
+    outputStorageKey,
+    syncWithUrl,
+    setUrlState,
+    prefix,
   ]);
 
   // Clear only the output
   const clearOutput = useCallback(() => {
     setOutput(undefined);
-    
+
     // Remove from localStorage if enabled
     if (persist && persistOutput) {
       storage.remove(outputStorageKey);
     }
-    
+
     // Remove from URL if enabled
     if (syncWithUrl) {
       setUrlState({ [`${prefix}out`]: undefined });
     }
-  }, [persist, persistOutput, outputStorageKey, syncWithUrl, setUrlState, prefix, setOutput]);
+  }, [
+    persist,
+    persistOutput,
+    outputStorageKey,
+    syncWithUrl,
+    setUrlState,
+    prefix,
+    setOutput,
+  ]);
 
   // Get a shareable URL with the current state
   const getShareableUrl = useCallback(() => {
     const state: Record<string, any> = {};
-    
+
     if (input !== initialInput) {
       state[`${prefix}in`] = input;
     }
-    
+
     if (output !== undefined && output !== initialOutput) {
       state[`${prefix}out`] = output;
     }
-    
+
     return UrlStateManager.getShareableUrl(state);
   }, [input, output, initialInput, initialOutput, prefix]);
 
   // Copy the shareable URL to clipboard
   const copyShareableUrl = useCallback(() => {
     const state: Record<string, any> = {};
-    
+
     if (input !== initialInput) {
       state[`${prefix}in`] = input;
     }
-    
+
     if (output !== undefined && output !== initialOutput) {
       state[`${prefix}out`] = output;
     }
-    
+
     return UrlStateManager.copyShareableUrl(state);
   }, [input, output, initialInput, initialOutput, prefix]);
 
@@ -381,7 +413,7 @@ function useUtilityState<T, R = any>(
     output,
     isLoading,
     error,
-    
+
     // Actions
     setInput,
     setOutput,
@@ -389,7 +421,7 @@ function useUtilityState<T, R = any>(
     reset,
     clearOutput,
     clearError,
-    
+
     // Utility
     getShareableUrl,
     copyShareableUrl,

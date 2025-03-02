@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface ErrorMessageProps {
   message: string;
@@ -10,7 +10,7 @@ export interface ErrorMessageProps {
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({
   message,
-  className = '',
+  className = "",
   showIcon = true,
   onDismiss,
   dismissable = false,

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { InfoBox } from '../Feedback';
-import { Button } from '../UI';
-import { useMediaQuery } from '../../hooks';
+import React, { useState } from "react";
+import { InfoBox } from "../Feedback";
+import { Button } from "../UI";
+import { useMediaQuery } from "../../hooks";
 
 export interface UtilityPageProps {
   title: string;
@@ -18,12 +18,12 @@ const UtilityPage: React.FC<UtilityPageProps> = ({
   description,
   helpContent,
   children,
-  className = '',
+  className = "",
   actions,
   initialHelpExpanded = false,
 }) => {
   const [isHelpExpanded, setIsHelpExpanded] = useState(initialHelpExpanded);
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const toggleHelp = () => {
     setIsHelpExpanded(!isHelpExpanded);
@@ -64,7 +64,7 @@ const UtilityPage: React.FC<UtilityPageProps> = ({
                   </svg>
                 }
               >
-                {isHelpExpanded ? 'Hide Help' : 'Show Help'}
+                {isHelpExpanded ? "Hide Help" : "Show Help"}
               </Button>
             )}
             {actions}

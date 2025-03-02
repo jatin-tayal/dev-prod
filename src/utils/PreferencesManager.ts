@@ -4,14 +4,14 @@ export interface PreferenceOptions<T> {
   validate?: (value: T) => boolean;
 }
 
-const PREFERENCES_STORAGE_KEY = 'dev-prod-preferences';
+const PREFERENCES_STORAGE_KEY = "dev-prod-preferences";
 
 /**
  * Utility class for managing user preferences
  */
 class PreferencesManager {
   private preferences: Record<string, any> = {};
-  
+
   constructor() {
     this.loadFromStorage();
   }
@@ -22,13 +22,13 @@ class PreferencesManager {
   set<T>(key: string, value: T, options: PreferenceOptions<T> = {}): boolean {
     const { category, validate } = options;
     const fullKey = category ? `${category}.${key}` : key;
-    
+
     // Validate if validation function is provided
     if (validate && !validate(value)) {
       console.warn(`Invalid preference value for ${fullKey}`);
       return false;
     }
-    
+
     // Set the preference
     this.setNestedProperty(this.preferences, fullKey, value);
     this.saveToStorage();
@@ -41,10 +41,10 @@ class PreferencesManager {
   get<T>(key: string, options: PreferenceOptions<T> = {}): T {
     const { category, defaultValue } = options;
     const fullKey = category ? `${category}.${key}` : key;
-    
+
     // Get the preference or return default
     const value = this.getNestedProperty(this.preferences, fullKey);
-    return value !== undefined ? value : defaultValue as T;
+    return value !== undefined ? value : (defaultValue as T);
   }
 
   /**
@@ -95,7 +95,7 @@ class PreferencesManager {
       // Set for specific category
       this.preferences[category] = {
         ...this.getCategory(category),
-        ...preferences
+        ...preferences,
       };
     } else {
       // Set at root level
@@ -103,7 +103,7 @@ class PreferencesManager {
         this.setNestedProperty(this.preferences, key, value);
       });
     }
-    
+
     this.saveToStorage();
   }
 
@@ -117,7 +117,7 @@ class PreferencesManager {
       this.saveToStorage();
       return true;
     } catch (error) {
-      console.error('Failed to import preferences:', error);
+      console.error("Failed to import preferences:", error);
       return false;
     }
   }
@@ -139,7 +139,7 @@ class PreferencesManager {
         this.preferences = JSON.parse(storedPreferences);
       }
     } catch (error) {
-      console.error('Failed to load preferences from storage:', error);
+      console.error("Failed to load preferences from storage:", error);
       this.preferences = {};
     }
   }
@@ -149,29 +149,36 @@ class PreferencesManager {
    */
   private saveToStorage(): void {
     try {
-      localStorage.setItem(PREFERENCES_STORAGE_KEY, JSON.stringify(this.preferences));
+      localStorage.setItem(
+        PREFERENCES_STORAGE_KEY,
+        JSON.stringify(this.preferences)
+      );
     } catch (error) {
-      console.error('Failed to save preferences to storage:', error);
+      console.error("Failed to save preferences to storage:", error);
     }
   }
 
   /**
    * Set a nested property using a dot-notation string
    */
-  private setNestedProperty(obj: Record<string, any>, path: string, value: any): void {
-    const parts = path.split('.');
+  private setNestedProperty(
+    obj: Record<string, any>,
+    path: string,
+    value: any
+  ): void {
+    const parts = path.split(".");
     let current = obj;
-    
+
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
-      
+
       if (!(part in current)) {
         current[part] = {};
       }
-      
+
       current = current[part];
     }
-    
+
     current[parts[parts.length - 1]] = value;
   }
 
@@ -179,17 +186,17 @@ class PreferencesManager {
    * Get a nested property using a dot-notation string
    */
   private getNestedProperty(obj: Record<string, any>, path: string): any {
-    const parts = path.split('.');
+    const parts = path.split(".");
     let current = obj;
-    
+
     for (const part of parts) {
       if (current === undefined || current === null) {
         return undefined;
       }
-      
+
       current = current[part];
     }
-    
+
     return current;
   }
 
@@ -197,19 +204,19 @@ class PreferencesManager {
    * Remove a nested property using a dot-notation string
    */
   private removeNestedProperty(obj: Record<string, any>, path: string): void {
-    const parts = path.split('.');
+    const parts = path.split(".");
     let current = obj;
-    
+
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i];
-      
+
       if (!(part in current)) {
         return;
       }
-      
+
       current = current[part];
     }
-    
+
     delete current[parts[parts.length - 1]];
   }
 }

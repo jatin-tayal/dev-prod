@@ -1,5 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import ErrorFallback from './ErrorFallback';
+import React, { Component, ErrorInfo, ReactNode } from "react";
+import ErrorFallback from "./ErrorFallback";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -23,7 +23,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     this.state = {
       hasError: false,
       error: null,
-      errorInfo: null
+      errorInfo: null,
     };
   }
 
@@ -32,16 +32,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return {
       hasError: true,
       error,
-      errorInfo: null
+      errorInfo: null,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // You can also log the error to an error reporting service
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
-    
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+
     this.setState({
-      errorInfo
+      errorInfo,
     });
 
     if (this.props.onError) {
@@ -52,12 +52,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return this.props.fallback || (
-        <ErrorFallback 
-          error={this.state.error}
-          errorInfo={this.state.errorInfo}
-          resetError={() => this.setState({ hasError: false, error: null, errorInfo: null })}
-        />
+      return (
+        this.props.fallback || (
+          <ErrorFallback
+            error={this.state.error}
+            errorInfo={this.state.errorInfo}
+            resetError={() =>
+              this.setState({ hasError: false, error: null, errorInfo: null })
+            }
+          />
+        )
       );
     }
 

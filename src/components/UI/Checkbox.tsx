@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export interface CheckboxProps {
   checked: boolean;
@@ -22,11 +22,12 @@ const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
   required = false,
   error,
-  className = '',
-  labelClassName = '',
+  className = "",
+  labelClassName = "",
 }) => {
   // Generate a unique ID if none provided
-  const checkboxId = id || `checkbox-${Math.random().toString(36).substring(2, 9)}`;
+  const checkboxId =
+    id || `checkbox-${Math.random().toString(36).substring(2, 9)}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.checked);
@@ -49,9 +50,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
             border-gray-300 dark:border-gray-700
             focus:ring-primary-500 dark:focus:ring-primary-600
             disabled:opacity-50 disabled:cursor-not-allowed
-            ${error ? 'border-red-500' : ''}
+            ${error ? "border-red-500" : ""}
           `}
-          aria-invalid={error ? 'true' : 'false'}
+          aria-invalid={error ? "true" : "false"}
         />
       </div>
       {label && (
@@ -60,7 +61,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
             htmlFor={checkboxId}
             className={`
               font-medium text-gray-700 dark:text-gray-300
-              ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+              ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
               ${labelClassName}
             `}
           >
@@ -68,7 +69,9 @@ const Checkbox: React.FC<CheckboxProps> = ({
             {required && <span className="text-red-500 ml-1">*</span>}
           </label>
           {error && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-500">{error}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-500">
+              {error}
+            </p>
           )}
         </div>
       )}

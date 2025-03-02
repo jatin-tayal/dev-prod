@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import ValidationError from '../utils/ValidationError';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import ValidationError from "../utils/ValidationError";
 
 export interface ErrorState {
   error: Error | null;
@@ -18,7 +18,9 @@ interface ErrorContextType {
 
 const ErrorContext = createContext<ErrorContextType | undefined>(undefined);
 
-export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ErrorProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [error, setErrorState] = useState<ErrorState | null>(null);
 
   const setError = (err: Error | null, field?: string) => {
@@ -30,7 +32,7 @@ export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const errorState: ErrorState = {
       error: err,
       message: err.message,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
 
     if (err instanceof ValidationError) {
@@ -43,8 +45,8 @@ export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setErrorState(errorState);
 
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error captured in ErrorContext:', err);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Error captured in ErrorContext:", err);
     }
   };
 
@@ -58,7 +60,7 @@ export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         error,
         setError,
         clearError,
-        hasError: error !== null
+        hasError: error !== null,
       }}
     >
       {children}
@@ -69,7 +71,7 @@ export const ErrorProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 export const useError = (): ErrorContextType => {
   const context = useContext(ErrorContext);
   if (context === undefined) {
-    throw new Error('useError must be used within an ErrorProvider');
+    throw new Error("useError must be used within an ErrorProvider");
   }
   return context;
 };
